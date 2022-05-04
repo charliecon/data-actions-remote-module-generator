@@ -1,13 +1,14 @@
-contract_input_placeholder_id       = 'contract_input_placeholder'
-contract_output_placeholder_id      = 'contract_output_placeholder'
-request_url_template_placeholder_id = 'request_url_template_placeholder'
-request_type_placeholder_id         = 'request_type_placeholder'
-request_template_placeholder_id     = 'request_template_placeholder'
-headers_placeholder_id              = 'headers_placeholder'
-success_template_placeholder_id     = 'success_template_placeholder'
-translation_map_placeholder_id      = 'translation_map_placeholder'
+contract_input_placeholder_id           = 'contract_input_placeholder'
+contract_output_placeholder_id          = 'contract_output_placeholder'
+request_url_template_placeholder_id     = 'request_url_template_placeholder'
+request_type_placeholder_id             = 'request_type_placeholder'
+request_template_placeholder_id         = 'request_template_placeholder'
+headers_placeholder_id                  = 'headers_placeholder'
+success_template_placeholder_id         = 'success_template_placeholder'
+translation_map_placeholder_id          = 'translation_map_placeholder'
+translation_map_defaults_placeholder_id = 'translation_map_defaults_placeholder'
 
-path_to_template_main = 'template_main.tf'
+path_to_template_main = 'template_files/template_main.tf'
 
 def insert_values(values, path):
     fin = open(path_to_template_main, 'rt')
@@ -32,14 +33,15 @@ def insert_values(values, path):
 def get_line(values, line):
     # the place holder id : the value to replace it with
     pairs = {
-        contract_input_placeholder_id: values['contract_input'],
-        contract_output_placeholder_id: values['contract_output'],
-        request_url_template_placeholder_id: values['requestUrlTemplate'],
-        request_type_placeholder_id: values['requestType'],
-        request_template_placeholder_id: values['requestTemplate'],
-        headers_placeholder_id: values['headers'],
-        success_template_placeholder_id: values['successTemplate'],
-        translation_map_placeholder_id: values['translationMap']
+        contract_input_placeholder_id:           values['contract_input'],
+        contract_output_placeholder_id:          values['contract_output'],
+        request_url_template_placeholder_id:     values['requestUrlTemplate'],
+        request_type_placeholder_id:             values['requestType'],
+        request_template_placeholder_id:         values['requestTemplate'],
+        headers_placeholder_id:                  values['headers'],
+        success_template_placeholder_id:         values['successTemplate'],
+        translation_map_placeholder_id:          values['translationMap'],
+        translation_map_defaults_placeholder_id: values['translationMapDefaults']
     }
 
     for k, v in pairs.items():
@@ -48,6 +50,8 @@ def get_line(values, line):
                 return headers_placeholder_id
             if k == translation_map_placeholder_id:
                 return translation_map_placeholder_id
+            if k == translation_map_defaults_placeholder_id:
+                return translation_map_defaults_placeholder_id
             return line.replace(k, v)
     return line
 
@@ -80,13 +84,17 @@ def contains_nested_object(line):
         return True
     if translation_map_placeholder_id in line:
         return True
+    if translation_map_defaults_placeholder_id in line:
+        return True 
     return False
 
 def determine_attribute_values(line, values):
     if headers_placeholder_id in line:
         return headers_placeholder_id, values['headers'], 'headers = {'
-    #else translation_map_placeholder_id in line:
-    return translation_map_placeholder_id, values['translationMap'], 'translation_map = {'
+    elif translation_map_defaults_placeholder_id in line:
+        return translation_map_defaults_placeholder_id, values['translationMapDefaults'], 'translation_map_defaults = {'
+    else:
+        return translation_map_placeholder_id, values['translationMap'], 'translation_map = {'
 
 if __name__ == '__main__':
     print('Execute runner.sh')

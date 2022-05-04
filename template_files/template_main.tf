@@ -16,6 +16,7 @@ resource "genesyscloud_integration_action" "action" {
 
     config_response {
         success_template = "success_template_placeholder"
-        translation_map_placeholder        
+        translation_map_placeholder 
+        translation_map_defaults_placeholder       
     }
 }
