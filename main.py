@@ -4,17 +4,11 @@ import argparse
 parser = argparse.ArgumentParser()
 parser.add_argument('--test', action='store_true')
 
-default_path_to_data_actions = '../../genesys_src/repos/genesys-cloud-data-actions'
-parent_dir_name               = 'modules'
-consistent_files_dir_name     = 'consistent_files'
-local_provider_path           = './test_tf_files/local_provider.tf'
-is_for_tests                  = False
-
-def create_parent_directory():
-    try:
-        os.mkdir(parent_dir_name)
-    except OSError as error:
-        print(error)
+default_path_to_data_actions = 'path/to/data-actions'
+parent_dir_name              = 'modules'
+consistent_files_dir_name    = 'consistent_files'
+local_provider_path          = './test_tf_files/local_provider.tf'
+is_for_tests                 = False
 
 ##
 # Copy consistent files (.gitignore, LICENSE, etc.) into remote module folder
@@ -55,15 +49,16 @@ def generate_module_from_file(file_path):
     generate_dir(file_path)
 
 def generate_modules_from_dir(dir_path):
-    counter = 0
-    limit = 10
     contents = os.listdir(dir_path)
     for c in contents:
-        counter += 1
-        if counter > limit:
-            return
         if c.endswith('.json'):            
             generate_module_from_file(os.path.join(dir_path, c))
+
+def create_parent_directory():
+    try:
+        os.mkdir(parent_dir_name)
+    except OSError as error:
+        print(error)
 
 def main(args):
     create_parent_directory()
@@ -77,6 +72,8 @@ def main(args):
         generate_module_from_file(path)
     elif os.path.isdir(path):
         generate_modules_from_dir(path)   
+    else:
+        print('The provided path is invalid or cannot be found.')
 
 if __name__ == '__main__':
     args, left = parser.parse_known_args()
