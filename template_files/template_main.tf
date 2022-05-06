@@ -4,8 +4,8 @@ resource "genesyscloud_integration_action" "action" {
     integration_id = var.integration_id
     secure         = var.secure_data_action
     
-    contract_input  = "contract_input_placeholder"
-    contract_output = "contract_output_placeholder"
+    contract_input  = contract_input_placeholder
+    contract_output = contract_output_placeholder
     
     config_request {
         request_template     = "request_template_placeholder"

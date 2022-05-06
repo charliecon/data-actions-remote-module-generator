@@ -1,7 +1,8 @@
-MODULES_DIR="modules"
+DATA_ACTIONS_PATH=$1
+DESTINATION="modules"
 
-if [ -d "$MODULES_DIR" ]; then
-    rm -rf $MODULES_DIR
+if [ -d "$DESTINATION" ]; then
+    rm -rf $DESTINATION
 fi
-
-python main.py
+ 
+python main.py $DATA_ACTIONS_PATH
