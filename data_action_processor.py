@@ -39,9 +39,7 @@ def proccess_data_action(path_to_file):
 
     return result
 
-def escape_special_chars(val):
-    if val == '':
-        return val
+def escape_special_chars(val):    
     return val.encode('unicode_escape').decode('utf-8').replace('${', '$${').replace('"', '\\"')
 
 def encode_json(data):

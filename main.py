@@ -2,13 +2,13 @@ import os, shutil, data_action_processor, resource_file_writer, readme_writer, s
 import argparse
 
 parser = argparse.ArgumentParser()
-parser.add_argument('--test', action='store_true')
+parser.add_argument('--local', action='store_true')
 
 default_path_to_data_actions = 'path/to/data-actions'
 parent_dir_name              = 'modules'
 consistent_files_dir_name    = 'consistent_files'
 local_provider_path          = './test_tf_files/local_provider.tf'
-is_for_tests                 = False
+use_local_provider           = False
 
 ##
 # Copy consistent files (.gitignore, LICENSE, etc.) into remote module folder
@@ -17,8 +17,8 @@ def move_consistent_files_to_module_folder(json_file_path, path_to_module):
     consistent_files = os.listdir(consistent_files_dir_name)
     for c in consistent_files:
         # If running for testing purposes - use sideload as provider to speed up tests.
-        if c == 'provider.tf' and is_for_tests:
-            shutil.copy(local_provider_path, path_to_module)
+        if c == 'provider.tf' and use_local_provider:
+            shutil.copy(local_provider_path, path_to_module)        
         else:
             shutil.copy(os.path.join(consistent_files_dir_name, c), path_to_module)
     # Copy the original data action json file into the repo
@@ -63,9 +63,9 @@ def create_parent_directory():
 def main(args):
     create_parent_directory()
     path = default_path_to_data_actions
-    if len(args) > 2 and is_for_tests:
+    if len(args) > 2 and use_local_provider:
         path = args[2]
-    elif len(args) > 1 and is_for_tests is False:
+    elif len(args) > 1 and use_local_provider is False:
         path = args[1]
     
     if os.path.isfile(path) and str(path).endswith('.json'):
@@ -77,5 +77,5 @@ def main(args):
 
 if __name__ == '__main__':
     args, left = parser.parse_known_args()
-    is_for_tests = args.test
+    use_local_provider = args.local
     main(sys.argv)
