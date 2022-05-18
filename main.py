@@ -1,4 +1,4 @@
-import os, shutil, data_action_processor, resource_file_writer, readme_writer, sys
+import os, shutil, data_action_processor, resource_file_writer, readme_writer, accelerator, sys
 import argparse
 
 parser = argparse.ArgumentParser()
@@ -44,6 +44,8 @@ def generate_dir(path):
    
     resource_file_writer.insert_values(values, path_to_resource_file)  
     readme_writer.insert_values(dir_name, values['name'], path_to_readme_file)
+
+    accelerator.create_accelerator_file(path, full_path)
 
 def generate_module_from_file(file_path):
     generate_dir(file_path)
